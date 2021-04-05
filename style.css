@@ -1,0 +1,85 @@
+body {
+    font-family: Tahoma, Helvetica, sans-serif;
+}
+
+.hLogIn {
+    color: #141414;
+    font-weight: 600;
+    text-align: center;
+}
+
+.titleStyle{
+    font-size: 1.5em;
+}
+
+.userInfo {
+    color: white;
+}
+
+.centerLogIn{
+    margin: auto;
+    margin-top: 10%;
+    width: 50%;
+    padding: 50px;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.centerLogIn2{
+    margin: auto;
+    margin-top: 3%;
+    width: 50%;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.centerMain {
+    margin: auto;
+    width: 50%;
+    padding: 20px;
+}
+
+.centerAdd {
+    margin: auto;
+    width: 50%;
+}
+
+.divider {
+    margin: auto;
+    width: 50%;
+}
+
+hr.solid {
+    border-top: 5px solid #bbb;
+  }
+
+.centerTask{
+    margin: auto;
+    width: 50%;
+    padding: 20px;
+    padding-top: 30px;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+
+.trashBtn :hover{
+    float: right;
+    color: #d9534f !important;
+ }
+
+.trashBtn {
+    float: right;
+    color: #d9544fb2 !important;
+ }
+
+ .editBtn :hover{
+    float: right;
+    color: #0275d8 !important;
+ }
+
+.editBtn {
+    float: right;
+    color: #0274d8c4 !important;
+ }
