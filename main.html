@@ -40,8 +40,8 @@
 
             <form id="addTaskForm">
                 <div class="input-group centerAdd mt-4 mb-4">
-                    <input type="text" id="task" class="form-control pt-4 pb-4" placeholder="Enter task" required autocomplete="off">
-                    <div class="input-group-append">
+                    <input type="text" id="task" class="form-control pt-4 pb-4" placeholder="Enter task"  maxlength="40" required autocomplete="off">
+                    <div class="input-group-append"></div>
                         <button class="btn btn-outline-secondary"><i class="fas fa-plus"></i></button>
                     </div>
                 </div>
@@ -53,23 +53,40 @@
         </div>
 
         <!-- EDIT TASK MODAL -->
-        <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle">Edit task</h5>
-            </div>
-            <div class="modal-body">
-                <div class="input-group input-group-lg">
-                    <input type="text" class="form-control" aria-label="Large" aria-describedby="inputGroup-sizing-sm">
+        <div class="modal fade" id="editTaskModal" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit task</h5>
+                </div>
+                <form>
+                    <div class="modal-body">
+                        <div class="input-group input-group-lg">
+                            <input type="text" class="form-control inputNewTask" aria-label="Large" aria-describedby="inputGroup-sizing-sm" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button class="btn btn-primary updateTask">SAVE</button>
+                    </div>
+                </form>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">SAVE</button>
-            </div>
-            </div>
         </div>
+
+         <!-- LOG-OUT MODAL -->
+         <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                       <h5>Are you sure you want to log-out?</h5>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">NO</button>
+                        <button class="btn btn-primary">YES</button>
+                    </div>
+                </div>
+            </div>
         </div>
         
     

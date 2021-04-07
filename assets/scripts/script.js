@@ -11,11 +11,13 @@ auth.onAuthStateChanged(user => {
                 if (change.type == 'added') {
                     renderTask(change.doc);
                 } else if (change.type == 'removed') {
-        let li = taskCard.querySelector(`[data-id="${change.doc.id}"]`);
+                    let li = taskCard.querySelector(`[data-id="${change.doc.id}"]`);
                     taskCard.removeChild(li);
+                } else if (change.type == "modified") {
+                    console.log("Modified city: ", change.doc.data());
                 }
             })
-})
+        })
 
     } else {
         console.log("User logged-out", user);
@@ -181,19 +183,18 @@ function renderTask(doc) {
     li.classList.add("mb-3")
     taskName.classList.add("taskStyle");
     del.classList.add("trashBtn");
+    del.classList.add("ml-3");
     edit.classList.add("editBtn");
-
-
+   
     li.setAttribute('data-id', doc.id);
     del.setAttribute('data-id', doc.id);
     edit.setAttribute('data-id', doc.id);
 
     taskName.textContent= doc.data().task;
 
-    del.innerHTML= `<i class="fas fa-trash fa-1x "></i>`;
-    edit.innerHTML= `<a class="pr-3" type="button" data-toggle="modal" data-target="#exampleModalCenter"><i class="fas fa-edit"></i></a>`;
+    del.innerHTML= `<i class="fas fa-trash fa-2x"></i>`;
+    edit.innerHTML= `<i class="fas fa-edit  fa-2x"></i>`;
     
-
     li.appendChild(taskName);
     li.appendChild(del);
     li.appendChild(edit);
@@ -215,6 +216,39 @@ function renderTask(doc) {
        
     });
 
+    const inputNewTask = document.querySelector(".inputNewTask");
+    
+    // UPDATE DATA - FIREBASE
+    edit.addEventListener("click", (e) => {
+        e.stopPropagation();
+        
+        let id = edit.getAttribute('data-id');
+        
+        console.log(id);
+
+        $("#editTaskModal").modal("show");
+
+        const updateTask = document.querySelector(".updateTask");
+
+        updateTask.addEventListener("click", (e) => {
+            e.preventDefault();
+
+            let newTask = inputNewTask.value;
+            console.log(newTask);
+
+            auth.onAuthStateChanged(user => {
+                if (user) {
+                    db.collection(user.uid).doc(id).update({
+                        task: newTask
+                    });
+                    console.log("Task updated")
+                    $("#editTaskModal").modal("hide");
+                    setTimeout(function(){ location.reload(); }, 1000);
+         
+                }
+            })
+        });  
+    });
 }
 // -----------------------------------------------------------------------------------------------------
 
