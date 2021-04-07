@@ -4,14 +4,18 @@ auth.onAuthStateChanged(user => {
         console.log("User logged-in:", user);
         setupUI(user);
 
-          // GET DATA - FIREBASE
-          db.collection(user.uid).onSnapshot(snapshot => {
-            console.log(snapshot.docs);
-            setupTask(snapshot.docs);
-            setupUI(user);
-        }, err => {
-            console.log(err.message);
-        })
+          // REAL TIME - GET DATA FROM FIREBASE
+        db.collection(user.uid).onSnapshot(snapshot => {
+            let changes = snapshot.docChanges();
+            changes.forEach(change => {
+                if (change.type == 'added') {
+                    renderTask(change.doc);
+                } else if (change.type == 'removed') {
+        let li = taskCard.querySelector(`[data-id="${change.doc.id}"]`);
+                    taskCard.removeChild(li);
+                }
+            })
+})
 
     } else {
         console.log("User logged-out", user);
@@ -20,6 +24,7 @@ auth.onAuthStateChanged(user => {
         setupGuides([]);
     }
 })
+
 // -----------------------------------------------------------------------------------------------------
 
 // LOG-IN- FIREBASE 
@@ -93,6 +98,8 @@ if (signupForm) {
     
     })
 }
+
+
 // -----------------------------------------------------------------------------------------------------
 
 // SIGN-OUT FIREBASE 
@@ -136,7 +143,7 @@ addTaskForm.addEventListener('submit', (e) => {
             })
         }
         else {
-            // console.log('user is not signed in to add todos');
+            console.log('user is not signed in to add todos');
         }
     })
 })
@@ -161,49 +168,53 @@ const setupUI = (user) => {
 
 // -----------------------------------------------------------------------------------------------------
 
-// SETUP TASK
+// RENDER TASK FIREBASE
 const taskCard = document.querySelector("#taskCard");
-const setupTask = (data) => {
 
-  if (data.length) {
-      let html = '';
+function renderTask(doc) {
+    let li = document.createElement("li");
+    let taskName = document.createElement("span");
+    let del = document.createElement("div");
+    let edit = document.createElement("div");
+    
+    li.classList.add("centerTask")
+    li.classList.add("mb-3")
+    taskName.classList.add("taskStyle");
+    del.classList.add("trashBtn");
+    edit.classList.add("editBtn");
 
-      data.forEach(doc => {
-        let task = doc.data();
-        let li = 
-        `
-          <div class="centerTask mb-3">
-                <h5>${task.task}<a class="trashBtn deleteBtn" type="button" data-id="${task.id}"><i class="fas fa-trash fa-1x "></i></a> <a class="editBtn pr-3" type="button" data-toggle="modal" data-target="#exampleModalCenter"><i class="fas fa-edit"></i></a></h5> 
-          </div>
-        `;
 
-          html += li
-          taskCard.innerHTML= html;
+    li.setAttribute('data-id', doc.id);
+    del.setAttribute('data-id', doc.id);
+    edit.setAttribute('data-id', doc.id);
 
-      })
-      
-        // DELETE TASK FIREBASE
+    taskName.textContent= doc.data().task;
 
-        const deleteTask = document.querySelector('.deleteBtn');
+    del.innerHTML= `<i class="fas fa-trash fa-1x "></i>`;
+    edit.innerHTML= `<a class="pr-3" type="button" data-toggle="modal" data-target="#exampleModalCenter"><i class="fas fa-edit"></i></a>`;
+    
 
-        if (deleteTask) {
-            deleteTask.addEventListener('click', () => {
-                console.log("pass")
-                let id = deleteTask.getAttribute('data-id');
-                auth.onAuthStateChanged(user => {
-                    if (user) {
-                        db.collection(user.uid).doc(id).delete();
-                    }
-                })
-            })
-        }
+    li.appendChild(taskName);
+    li.appendChild(del);
+    li.appendChild(edit);
 
-    } else {
-        taskCard.innerHTML = '<h5 class="centerTask">No task  listed </h5>'
-    }
+    taskCard.appendChild(li);
 
-  
+    // DELETE DATA FROM DATABASE
+    del.addEventListener("click", (e) => {
+        e.stopPropagation();
+    
+        let id = del.getAttribute('data-id');
+
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                db.collection(user.uid).doc(id).delete();
+                console.log("Task deleted")
+            }
+        })
+       
+    });
+
 }
-
 // -----------------------------------------------------------------------------------------------------
 

@@ -83,3 +83,19 @@ hr.solid {
     float: right;
     color: #0274d8c4 !important;
  }
+
+ li div{
+    cursor:  pointer;
+}
+
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+  }
+
+.taskStyle {
+    font-size: 1.5em;
+    font-weight: 520;
+}
+
