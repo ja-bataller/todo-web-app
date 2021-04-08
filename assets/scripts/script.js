@@ -86,9 +86,18 @@ if (signupForm) {
                     location = "main.html"
                 })   
                 
+            }).catch(e => {
+
+                // IZITOAST ERROR POP-UP
+                iziToast.error({
+                    title: e.message,
+                    position: "topCenter",
+                    timeout: 3000,
+                });
+                signupForm.reset();
             })
         } else {
-            console.log("SIGN UP UN-SUCCESSFUL")
+            console.log("Password doesn't match.")
 
             // IZITOAST ERROR POP-UP
             iziToast.error({
