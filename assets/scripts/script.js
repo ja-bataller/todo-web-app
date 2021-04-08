@@ -1,7 +1,7 @@
 // LISTEN TO AUTH CHANGES - FIREBASE
 auth.onAuthStateChanged(user => {
     if(user) {
-        console.log("User logged-in:", user);
+        console.log("User logged-in");
         setupUI(user);
 
           // REAL TIME - GET DATA FROM FIREBASE
@@ -14,16 +14,16 @@ auth.onAuthStateChanged(user => {
                     let li = taskCard.querySelector(`[data-id="${change.doc.id}"]`);
                     taskCard.removeChild(li);
                 } else if (change.type == "modified") {
-                    console.log("Modified city: ", change.doc.data());
+                    let li = taskCard.querySelector(`[data-id="${change.doc.id}"]`);
+                    li.firstChild.textContent = change.doc.data().task;
                 }
             })
         })
 
     } else {
         console.log("User logged-out", user);
-
         setupUI();
-        setupGuides([]);
+        renderTask([]);
     }
 })
 
@@ -41,17 +41,21 @@ if (loginForm) {
         const email = loginForm.loginEmail.value;
         const password = loginForm.loginPassword.value;
 
-        console.log(email);
-        console.log(password);
-
         // LOG-IN USER - FIREBASE
         auth.signInWithEmailAndPassword(email, password).then(cred => {
             console.log("Signed-in")
-            console.log(cred);
             loginForm.reset()
             // window.location.replace( "main.html" )
             location = "main.html";
             return
+        }).catch( e => {
+            iziToast.error({
+                title: "Unauthorzed Access",
+                message: 'This user is not registered.',
+                position: "topCenter",
+                timeout: 3000,
+            });
+            loginForm.reset();
         })
     })
 }
@@ -110,11 +114,19 @@ const logout = document.querySelector("#logout");
 if (logout) {
     logout.addEventListener("click", (e) => {
         e.preventDefault();
+        
+        $("#logoutModal").modal("show");
 
-        // SIGN-OUT USER - FIREBASE
-        auth.signOut().then(() => {
-            location = "index.html"
-        });
+        const logOutBtn = document.querySelector(".logOutBtn");
+
+        logOutBtn.addEventListener("click", (e) => {
+            // SIGN-OUT USER - FIREBASE
+            auth.signOut().then(() => {
+                location = "index.html"
+            });
+            $("#logoutModal").modal("hide");
+        })
+        
     })
 }
 
@@ -127,28 +139,35 @@ let date = new Date();
 let time = date.getTime();
 let counter = time;
 
-addTaskForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const task = addTaskForm.task.value;
-    // console.log(todos);
-    let id = counter += 1;
-    addTaskForm.reset();
-    auth.onAuthStateChanged(user => {
-        if (user) {
-            db.collection(user.uid).doc('_' + id).set({
-                id: '_' + id,
-                task
-            }).then(() => {
-                console.log('Task Added');
-            }).catch(err => {
-                console.log(err.message);
-            })
-        }
-        else {
-            console.log('user is not signed in to add todos');
-        }
+if (addTaskForm) {
+    addTaskForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const task = addTaskForm.task.value;
+        // console.log(todos);
+        let id = counter += 1;
+        addTaskForm.reset();
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                db.collection(user.uid).doc('_' + id).set({
+                    id: '_' + id,
+                    task
+                }).then(() => {
+                    console.log('Task Added');
+                }).catch(err => {
+                    console.log(err.message);
+                })
+            }
+            else {
+                iziToast.error({
+                    title: "Unauthorzed Access",
+                    message: 'Please log-in to add tasks.',
+                    position: "topCenter",
+                    timeout: 3000,
+                });
+            }
+        })
     })
-})
+}
 
 // -----------------------------------------------------------------------------------------------------
 
@@ -163,8 +182,6 @@ const setupUI = (user) => {
      `;
      accountDetails.innerHTML = html;
     })
-  } else {
-    accountDetails.innerHTML = '';
   }
 }
 
@@ -179,12 +196,15 @@ function renderTask(doc) {
     let del = document.createElement("div");
     let edit = document.createElement("div");
     
-    li.classList.add("centerTask")
-    li.classList.add("mb-3")
+
+    li.classList.add("list-group-item")
+    li.classList.add("mt-4")
+    li.classList.add("mb-2")
     taskName.classList.add("taskStyle");
     del.classList.add("trashBtn");
     del.classList.add("ml-3");
     edit.classList.add("editBtn");
+    edit.classList.add("ml-3")
    
     li.setAttribute('data-id', doc.id);
     del.setAttribute('data-id', doc.id);
@@ -210,45 +230,58 @@ function renderTask(doc) {
         auth.onAuthStateChanged(user => {
             if (user) {
                 db.collection(user.uid).doc(id).delete();
-                console.log("Task deleted")
+                console.log("Task Deleted")
             }
         })
        
     });
 
-    const inputNewTask = document.querySelector(".inputNewTask");
-    
     // UPDATE DATA - FIREBASE
     edit.addEventListener("click", (e) => {
         e.stopPropagation();
         
-        let id = edit.getAttribute('data-id');
-        
-        console.log(id);
-
         $("#editTaskModal").modal("show");
+
+        const closeEditTask = document.querySelector(".closeEditTask");
+
+        closeEditTask.addEventListener("click", (e) => {
+            e.preventDefault();
+            location.reload()
+        })
+
+        
 
         const updateTask = document.querySelector(".updateTask");
 
         updateTask.addEventListener("click", (e) => {
             e.preventDefault();
 
+            let inputNewTask = document.querySelector(".inputNewTask");
             let newTask = inputNewTask.value;
-            console.log(newTask);
 
-            auth.onAuthStateChanged(user => {
-                if (user) {
-                    db.collection(user.uid).doc(id).update({
-                        task: newTask
-                    });
-                    console.log("Task updated")
-                    $("#editTaskModal").modal("hide");
-                    setTimeout(function(){ location.reload(); }, 1000);
-         
-                }
-            })
+            if (newTask != "") {
+                let id = edit.getAttribute('data-id');
+
+                auth.onAuthStateChanged(user => {
+                    if (user) {
+                        db.collection(user.uid).doc(id).update({
+                            task: newTask
+                        });
+                        console.log("Task Updated")
+    
+                        document.querySelector(".inputNewTask").value = "";
+                        $("#editTaskModal").modal("hide");
+                        return
+                    }
+                })
+            } else {
+                iziToast.error({
+                    title: "Please input a task.",
+                    position: "topCenter",
+                    timeout: 3000,
+                });
+            }
         });  
     });
 }
 // -----------------------------------------------------------------------------------------------------
-
