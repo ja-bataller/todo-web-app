@@ -5,17 +5,35 @@ auth.onAuthStateChanged(user => {
         setupUI(user);
 
           // REAL TIME - GET DATA FROM FIREBASE
-        db.collection(user.uid).onSnapshot(snapshot => {
+        db.collection("tasks").where("uid", "==", user.uid).orderBy("createdOn", "desc").onSnapshot(snapshot => {
             let changes = snapshot.docChanges();
             changes.forEach(change => {
                 if (change.type == 'added') {
-                    renderTask(change.doc);
+                   renderTask(change.doc);
                 } else if (change.type == 'removed') {
                     let li = taskCard.querySelector(`[data-id="${change.doc.id}"]`);
                     taskCard.removeChild(li);
+                    iziToast.error({
+                        title: "Deleted",
+                        iconUrl: 'assets/img/trash-solid.svg',
+                        message: 'You task has been deleted.',
+                        position: "topCenter",
+                        timeout: 3000,
+                    });
                 } else if (change.type == "modified") {
-                    let li = taskCard.querySelector(`[data-id="${change.doc.id}"]`);
-                    li.firstChild.textContent = change.doc.data().task;
+                    // let li = taskCard.querySelector(`[data-id="${change.doc.id}"]`);
+                    // li.firstChild.textContent = change.doc.data().task;
+                    iziToast.info({
+                        title: "Updated",
+                        iconUrl: 'assets/img/edit-regular.svg',
+                        message: 'You task has been updated.',
+                        position: "topCenter",
+                        timeout: 2000,
+                    });
+                    setTimeout(function(){ 
+                        window.location.reload();
+                    }, 2000);
+                    
                 }
             })
         })
@@ -26,157 +44,6 @@ auth.onAuthStateChanged(user => {
         renderTask([]);
     }
 })
-
-// -----------------------------------------------------------------------------------------------------
-
-// LOG-IN- FIREBASE 
-const loginForm = document.querySelector("#login-form");
-
-if (loginForm) {
-
-    loginForm.addEventListener("submit", (e) => {
-        e.preventDefault();
-
-        // GET SIGN-IN DATA
-        const email = loginForm.loginEmail.value;
-        const password = loginForm.loginPassword.value;
-
-        // LOG-IN USER - FIREBASE
-        auth.signInWithEmailAndPassword(email, password).then(cred => {
-            console.log("Signed-in")
-            loginForm.reset()
-            // window.location.replace( "main.html" )
-            location = "main.html";
-            return
-        }).catch( e => {
-            iziToast.error({
-                title: "Unauthorzed Access",
-                message: 'This user is not registered.',
-                position: "topCenter",
-                timeout: 3000,
-            });
-            loginForm.reset();
-        })
-    })
-}
-
-// -----------------------------------------------------------------------------------------------------
-
-// SIGN-UP - FIREBASE 
-const signupForm = document.querySelector("#signup-form");
-
-if (signupForm) {
-    signupForm.addEventListener("submit", (e) => {
-        e.preventDefault();
-
-        // GET SIGN-UP DATA
-        const email = signupForm.signupEmail.value;
-        const password = signupForm.signupPassword.value;
-        const confirmPassword = signupForm.signupConfirmPassword.value;
-
-
-        if (password == confirmPassword) {
-            // SIGN-UP USER - FIREBASE
-            auth.createUserWithEmailAndPassword(email, password).then(cred => {
-                return db.collection('users').doc(cred.user.uid).set({
-                    name: signupForm.signupName.value
-                }).then(() => {
-                    console.log(cred);
-                    signupForm.reset();
-                    location = "main.html"
-                })   
-                
-            }).catch(e => {
-
-                // IZITOAST ERROR POP-UP
-                iziToast.error({
-                    title: e.message,
-                    position: "topCenter",
-                    timeout: 3000,
-                });
-                signupForm.reset();
-            })
-        } else {
-            console.log("Password doesn't match.")
-
-            // IZITOAST ERROR POP-UP
-            iziToast.error({
-                title: "Password doesn't match.",
-                position: "topCenter",
-                timeout: 3000,
-            });
-            
-            // CLEAR PASSWORD & CONFIRM PASSWORD INPUT FIELD
-            document.querySelector("#signupPassword").value = "";
-            document.querySelector("#signupConfirmPassword").value = "";
-        }
-    
-    })
-}
-
-
-// -----------------------------------------------------------------------------------------------------
-
-// SIGN-OUT FIREBASE 
-const logout = document.querySelector("#logout");
-
-if (logout) {
-    logout.addEventListener("click", (e) => {
-        e.preventDefault();
-        
-        $("#logoutModal").modal("show");
-
-        const logOutBtn = document.querySelector(".logOutBtn");
-
-        logOutBtn.addEventListener("click", (e) => {
-            // SIGN-OUT USER - FIREBASE
-            auth.signOut().then(() => {
-                location = "index.html"
-            });
-            $("#logoutModal").modal("hide");
-        })
-        
-    })
-}
-
-// -----------------------------------------------------------------------------------------------------
-
-// ADDING TASK FIREBASE
-const addTaskForm = document.querySelector('#addTaskForm');
-
-let date = new Date();
-let time = date.getTime();
-let counter = time;
-
-if (addTaskForm) {
-    addTaskForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const task = addTaskForm.task.value;
-        // console.log(todos);
-        let id = counter += 1;
-        addTaskForm.reset();
-        auth.onAuthStateChanged(user => {
-            if (user) {
-                db.collection(user.uid).doc('_' + id).set({
-                    id: '_' + id,
-                    task
-                }).then(() => {
-                    console.log('Task Added');
-                }).catch(err => {
-                    console.log(err.message);
-                })
-            }
-            else {
-                iziToast.error({
-                    title: "Unauthorzed Access",
-                    message: 'Please log-in to add tasks.',
-                    position: "topCenter",
-                    timeout: 3000,
-                });
-            }
-        })
-    })
-}
 
 // -----------------------------------------------------------------------------------------------------
 
@@ -196,20 +63,28 @@ const setupUI = (user) => {
 
 // -----------------------------------------------------------------------------------------------------
 
-// RENDER TASK FIREBASE
+// LOAD TASK FIREBASE
 const taskCard = document.querySelector("#taskCard");
 
 function renderTask(doc) {
     let li = document.createElement("li");
-    let taskName = document.createElement("span");
+    let taskTitle = document.createElement("span");
+    let taskDescription = document.createElement("span");
     let del = document.createElement("div");
     let edit = document.createElement("div");
+    let br = document.createElement("div");
+    let divider = document.createElement("div");
     
 
-    li.classList.add("list-group-item")
-    li.classList.add("mt-4")
-    li.classList.add("mb-2")
-    taskName.classList.add("taskStyle");
+    // li.classList.add("list-group-item")
+    li.classList.add("card-body")
+    li.classList.add("pt-4")
+    li.classList.add("pb-4")
+    li.classList.add("taskCard")
+
+    taskTitle.classList.add("taskTitleStyle");
+    taskDescription.classList.add("taskDescriptionStyle");
+
     del.classList.add("trashBtn");
     del.classList.add("ml-3");
     edit.classList.add("editBtn");
@@ -218,17 +93,31 @@ function renderTask(doc) {
     li.setAttribute('data-id', doc.id);
     del.setAttribute('data-id', doc.id);
     edit.setAttribute('data-id', doc.id);
-
-    taskName.textContent= doc.data().task;
-
-    del.innerHTML= `<i class="fas fa-trash fa-2x"></i>`;
-    edit.innerHTML= `<i class="fas fa-edit  fa-2x"></i>`;
     
-    li.appendChild(taskName);
+    taskTitle.textContent= doc.data().title;
+    taskDescription.textContent= doc.data().description;
+
+    edit.innerHTML= `<i class="fas fa-pen fa-2x"></i>`;
+    divider.innerHTML= `<hr class="task">`;
+    
+    br.innerHTML= `<br>`;
+    
+    li.appendChild(taskTitle);
     li.appendChild(del);
     li.appendChild(edit);
+    li.appendChild(divider);
+    li.appendChild(taskDescription);
+    
 
+    // taskCard.insertBefore(li, taskCard.childNodes[0]);
     taskCard.appendChild(li);
+    taskCard.appendChild(br);
+
+// -----------------------------------------------------------------------------------------------------
+
+
+
+// -----------------------------------------------------------------------------------------------------
 
     // DELETE DATA FROM DATABASE
     del.addEventListener("click", (e) => {
@@ -240,10 +129,19 @@ function renderTask(doc) {
             if (user) {
                 db.collection(user.uid).doc(id).delete();
                 console.log("Task Deleted")
+
+                // iziToast.error({
+                //     title: "Deleted",
+                //     message: 'You task has been deleted.',
+                //     position: "topCenter",
+                //     timeout: 3000,
+                // });
             }
         })
        
     });
+
+// -----------------------------------------------------------------------------------------------------
 
     // UPDATE DATA - FIREBASE
     edit.addEventListener("click", (e) => {
@@ -257,7 +155,6 @@ function renderTask(doc) {
             e.preventDefault();
             location.reload()
         })
-
         
 
         const updateTask = document.querySelector(".updateTask");
@@ -294,3 +191,54 @@ function renderTask(doc) {
     });
 }
 // -----------------------------------------------------------------------------------------------------
+// ADDING TASK FIREBASE
+let addTaskBtn = document.querySelector('#addTaskBtn');
+let inputTitle = document.querySelector('#inputTitle');
+let inputDescription = document.querySelector('#inputDescription');
+
+let date = new Date();
+let time = date.getTime();
+let counter = time;
+
+addTaskBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    const title = inputTitle.value;
+    const description = inputDescription.value;
+    let author;
+
+    console.log(title);
+    console.log(description);
+    
+    let id = counter += 1;
+    // addTaskForm.reset();
+    auth.onAuthStateChanged(async user => {
+        if (user) {
+            await db.collection('users').doc(user.uid).get().then(doc => {
+                author = doc.data().name;
+                console.log(author);
+            })
+            await db.collection("tasks").add({
+                "uid": user.uid,
+                "author": author,
+                "title": title,
+                "description": description,
+                "createdOn": firebase.firestore.Timestamp.now(),
+                "created": firebase.firestore.Timestamp.now(),
+              }).then(() => {
+                console.log('Task Added');
+                window.location.href ="home.html";
+                
+            }).catch(err => {
+                console.log(err.message);
+            })
+        }
+        else {
+            iziToast.error({
+                title: "Unauthorzed Access",
+                message: 'Please log-in to add tasks.',
+                position: "topCenter",
+                timeout: 3000,
+            });
+        }
+    })
+})

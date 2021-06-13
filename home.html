@@ -29,32 +29,24 @@
                 </div>
                 <div class="form-inline">
                     <label id="userInfo" class="mr-3 userInfo" for=""></label>
-                    <button id="logout" class="btn btn-outline-danger my-2 my-sm-0">log-out</button>
+                    <button id="logout" class="btn btn-outline-danger my-2 my-sm-0"><i class="fas fa-sign-out-alt"></i></button>
                 </div>
             </div>
         </nav>
 
         <div class="container">
-            <h2 class="container mt-4 mb-3" style="font-weight: 600; width: 50%;">All Task</h2>
+            <h2 class="container mt-4 mb-4" style="font-weight: 600; width: 50%;">All Tasks <a class="btn btn-outline-primary addBtn btn-lg" style="float: right; border-radius: 50%;" href="add_task.html"><i class="fas fa-plus"></i></a></h2>
             <hr class="solid divider">
-            <form id="addTaskForm">
-                <div class="input-group container mt-4 mb-4" style="width: 50%;">
-                    <input type="text" id="task" class="form-control pt-4 pb-4" placeholder="Enter task"  maxlength="40" required autocomplete="off">
-                    <div class="input-group-append">
-                        <button class="btn btn-outline-secondary"><i class="fas fa-plus"></i></button>
-                    </div>
-                </div>
-            </form>
         </div>    
 
-        <div class="card container mb-5" style="width: 50%;">
-            <ul id="taskCard" class="list-group list-group-flush">
-                <!-- TASK CONTENT HERE -->
+        <div class="container mb-5 mt-3" style="width: 50%;">
+            <ul id="taskCard" class="taskCards container" style="width: 70%;">
+                
             </ul>
         </div>
             
         <!-- EDIT TASK MODAL -->
-        <div class="modal fade" id="editTaskModal" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <!-- <div class="modal fade" id="editTaskModal" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                 <div class="modal-header">
@@ -73,18 +65,21 @@
                 </form>
                 </div>
             </div>
-        </div>
+        </div> -->
 
          <!-- LOG-OUT MODAL -->
          <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
+                    <div class="modal-header">
+                        <h3>Log-out</h3>
+                     </div>
                     <div class="modal-body">
                        <h5>Are you sure you want to log-out?</h5>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">NO</button>
-                        <button class="btn btn-primary logOutBtn">YES</button>
+                        <button class="btn btn-danger logOutBtn" style="border-radius: 50px;"> YES </button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" style="border-radius: 50px;"> NO </button>
                     </div>
                 </div>
             </div>
@@ -108,6 +103,7 @@
     <script src="https://www.gstatic.com/firebasejs/8.3.2/firebase-firestore.js"></script>
 
     <script src="assets/scripts/firebase.js"></script>
+    <script src="assets/scripts/authentication.js"></script>
     <script src="assets/scripts/script.js"></script>
 </body>
 </html>

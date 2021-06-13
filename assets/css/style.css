@@ -18,7 +18,7 @@ body {
 
 .centerLogIn{
     margin: auto;
-    margin-top: 10%;
+    margin-top: 5%;
     width: 50%;
     padding: 50px;
     border-radius: 5px;
@@ -54,6 +54,11 @@ hr.solid {
     border-top: 5px solid #bbb;
   }
 
+hr.task {
+    border-top: 3px solid #da7f8f;
+    width: 100%;
+}
+
 .trashBtn :hover{
     float: right;
     color: #d9534f !important;
@@ -84,8 +89,24 @@ ul {
     padding: 0;
   }
 
-.taskStyle {
-    font-size: 1.5em;
-    font-weight: 520;
+.taskTitleStyle {
+    font-size: 1.7em;
+    font-weight: 530;
 }
 
+.taskDescriptionStyle {
+    font-size: 1.3em;
+    font-weight: 500;
+}
+
+.taskCard {
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+}
+
+
+.center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+}

@@ -25,12 +25,13 @@
 
     <div class="container">
         <form id="signup-form" class="centerLogIn">
-          <h1 class="hLogIn pb-4">To-do App</h1>
+          <img class="center" src="assets/img/todo.png" alt="To-do Logo" style="width: 50%;">
+          <h2 class="hLogIn pb-4">To-do App</h2>
           <div class="input-group mb-3">
             <div class="input-group-prepend">
               <span class="input-group-text"><i class="fas fa-user"></i></span>
             </div>
-            <input type="text" class="form-control p-4" id="signupName" placeholder="Full Name" required>
+            <input type="text" class="form-control p-4" id="signupName" placeholder="Name" required>
           </div>
           <div class="input-group mb-3">
             <div class="input-group-prepend">
@@ -50,13 +51,13 @@
             </div>
             <input type="password" class="form-control p-4" id="signupConfirmPassword" minlength="6" placeholder="Confirm password" required>
           </div>
-            <button type="submit" class="btn btn-primary p-2" style="width:100%">SIGN UP</button>
+            <button type="submit" class="btn btn-primary p-2" style="height: 50px; width:100%; font-size: 1.5em; color: #fff; background-color: #7296CD; border-color: #7296CD; border-radius: 20px;">Sign-up</button>
         </form>
     </div>
 
     <div class="container">
       <form class="centerLogIn2">
-          <div class="text-center">
+          <div class="text-center pt-2">
             <label for="signUp">Have an account?</label>
             <a href="index.html">Log in</a>
           </div>
@@ -80,6 +81,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js" integrity="sha512-Zq9o+E00xhhR/7vJ49mxFNJ0KQw1E1TMWkPTxrWcnpfEFDEXgUiwJHIKit93EW/XxE31HSI5GEOW06G6BF1AtA==" crossorigin="anonymous"></script>
 
     <script src="assets/scripts/firebase.js"></script>
+    <script src="assets/scripts/authentication.js"></script>
     <script src="assets/scripts/script.js"></script>
   </body>
 </html>
