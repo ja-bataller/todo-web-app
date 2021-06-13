@@ -18,7 +18,7 @@ auth.onAuthStateChanged(user => {
                         iconUrl: 'assets/img/trash-solid.svg',
                         message: 'You task has been deleted.',
                         position: "topCenter",
-                        timeout: 3000,
+                        timeout: 2000,
                     });
                 } else if (change.type == "modified") {
                     // let li = taskCard.querySelector(`[data-id="${change.doc.id}"]`);
@@ -116,79 +116,64 @@ function renderTask(doc) {
 // -----------------------------------------------------------------------------------------------------
 
 
-
 // -----------------------------------------------------------------------------------------------------
-
-    // DELETE DATA FROM DATABASE
-    del.addEventListener("click", (e) => {
-        e.stopPropagation();
-    
-        let id = del.getAttribute('data-id');
-
-        auth.onAuthStateChanged(user => {
-            if (user) {
-                db.collection(user.uid).doc(id).delete();
-                console.log("Task Deleted")
-
-                // iziToast.error({
-                //     title: "Deleted",
-                //     message: 'You task has been deleted.',
-                //     position: "topCenter",
-                //     timeout: 3000,
-                // });
-            }
-        })
-       
-    });
-
-// -----------------------------------------------------------------------------------------------------
+    let taskId = edit.getAttribute('data-id');
+    let getTitle = taskTitle.innerText;
+    let getDescription = taskDescription.innerText;
 
     // UPDATE DATA - FIREBASE
     edit.addEventListener("click", (e) => {
         e.stopPropagation();
+
+        console.log("go to update page");
+        console.log(taskId);
+        sessionStorage.setItem("taskId", taskId);
+        sessionStorage.setItem("taskTitle", getTitle);
+        sessionStorage.setItem("taskDescription", getDescription);
+        window.location.href ="edit_task.html";
         
-        $("#editTaskModal").modal("show");
+        // $("#editTaskModal").modal("show");
 
-        const closeEditTask = document.querySelector(".closeEditTask");
+        // const closeEditTask = document.querySelector(".closeEditTask");
 
-        closeEditTask.addEventListener("click", (e) => {
-            e.preventDefault();
-            location.reload()
-        })
+        // closeEditTask.addEventListener("click", (e) => {
+        //     e.preventDefault();
+        //     location.reload()
+        // })
         
+        // const updateTask = document.querySelector(".updateTask");
 
-        const updateTask = document.querySelector(".updateTask");
+        // updateTask.addEventListener("click", (e) => {
+        //     e.preventDefault();
 
-        updateTask.addEventListener("click", (e) => {
-            e.preventDefault();
+        //     let inputNewTask = document.querySelector(".inputNewTask");
+        //     let newTask = inputNewTask.value;
 
-            let inputNewTask = document.querySelector(".inputNewTask");
-            let newTask = inputNewTask.value;
+        //     if (newTask != "") {
+        //         let id = edit.getAttribute('data-id');
 
-            if (newTask != "") {
-                let id = edit.getAttribute('data-id');
-
-                auth.onAuthStateChanged(user => {
-                    if (user) {
-                        db.collection(user.uid).doc(id).update({
-                            task: newTask
-                        });
-                        console.log("Task Updated")
+        //         auth.onAuthStateChanged(user => {
+        //             if (user) {
+        //                 db.collection(user.uid).doc(id).update({
+        //                     task: newTask
+        //                 });
+        //                 console.log("Task Updated")
     
-                        document.querySelector(".inputNewTask").value = "";
-                        $("#editTaskModal").modal("hide");
-                        return
-                    }
-                })
-            } else {
-                iziToast.error({
-                    title: "Please input a task.",
-                    position: "topCenter",
-                    timeout: 3000,
-                });
-            }
-        });  
+        //                 document.querySelector(".inputNewTask").value = "";
+        //                 $("#editTaskModal").modal("hide");
+        //                 return
+        //             }
+        //         })
+        //     } else {
+        //         iziToast.error({
+        //             title: "Please input a task.",
+        //             position: "topCenter",
+        //             timeout: 3000,
+        //         });
+        //     }
+        // });  
     });
+    
 }
 // -----------------------------------------------------------------------------------------------------
 // ADDING TASK FIREBASE
@@ -242,3 +227,28 @@ addTaskBtn.addEventListener('click', (e) => {
         }
     })
 })
+
+// -----------------------------------------------------------------------------------------------------
+
+
+// const logout = document.querySelector("#logout");
+
+// if (logout) {
+//     logout.addEventListener("click", (e) => {
+//         e.preventDefault();
+        
+//         $("#logoutModal").modal("show");
+        
+//         const logOutBtn = document.querySelector(".logOutBtn");
+
+//         logOutBtn.addEventListener("click", (e) => {
+//             sessionStorage.clear();
+//             // SIGN-OUT USER - FIREBASE
+//             auth.signOut().then(() => {
+//                 location = "index.html"
+//             });
+//             $("#logoutModal").modal("hide");
+//         })
+        
+//     })
+// }

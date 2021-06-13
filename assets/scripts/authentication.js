@@ -95,10 +95,11 @@ if (logout) {
         e.preventDefault();
         
         $("#logoutModal").modal("show");
-
+        
         const logOutBtn = document.querySelector(".logOutBtn");
 
         logOutBtn.addEventListener("click", (e) => {
+            sessionStorage.clear();
             // SIGN-OUT USER - FIREBASE
             auth.signOut().then(() => {
                 location = "index.html"
