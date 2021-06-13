@@ -16,6 +16,8 @@ auth.onAuthStateChanged(user => {
                         timeout: 2000,
                     });
 
+                    $("#deleteModal").modal("hide");
+
                     setTimeout(function(){
                         window.location.href ="home.html";
                     }, 2000);
@@ -30,7 +32,7 @@ auth.onAuthStateChanged(user => {
                         timeout: 2000,
                     });
                     setTimeout(function(){ 
-                        window.location.reload();
+                        window.location.href ="home.html";
                     }, 2000);
                     
                 }
@@ -52,6 +54,56 @@ function renderEdit() {
     document.querySelector("#editTitle").defaultValue = receivedTaskTitle;
     document.querySelector("#editDescription").defaultValue = receivedTaskDescription;
 }
+// -----------------------------------------------------------------------------------------------------
+
+let editTaskBtn = document.querySelector('#editTaskBtn');
+let editTitle = document.querySelector('#editTitle');
+let editDescription = document.querySelector('#editDescription');
+
+editTaskBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+
+    const title = editTitle.value;
+    const description = editDescription.value;
+
+    console.log(title);
+    console.log(description);
+    
+    if (title == "" || description == "") {
+        iziToast.error({
+            title: "Error",
+            message: 'Please fill up all fields.',
+            position: "topCenter",
+            timeout: 3000,
+        });
+    } else {
+        document.querySelector('#editTaskBtn').disabled = true;
+        auth.onAuthStateChanged(async user => {
+            if (user) {
+                let receivedTaskId = sessionStorage.getItem("taskId");
+                await db.collection("tasks").doc(receivedTaskId).update({
+                    "title": title,
+                    "description": description,
+                  }).then(() => {
+                    console.log('Task Update');
+                    
+                }).catch(err => {
+                    console.log(err.message);
+                })
+            }
+            else {
+                iziToast.error({
+                    title: "Unauthorzed Access",
+                    message: 'Please log-in to add tasks.',
+                    position: "topCenter",
+                    timeout: 3000,
+                });
+            }
+        })
+    }
+
+})
+
 
 // -----------------------------------------------------------------------------------------------------
 
@@ -68,24 +120,13 @@ if (deleteIcon) {
 
         deleteBtn.addEventListener("click", (e) => {
             let receivedTaskId = sessionStorage.getItem("taskId");
+            document.querySelector('#editTaskBtn').disabled = true;
     
             auth.onAuthStateChanged(user => {
                 if (user) {
                     db.collection("tasks").doc(receivedTaskId).delete();
-                    console.log("Task Deleted")
-        
-                    // iziToast.error({
-                    //     title: "Deleted",
-                    //     iconUrl: 'assets/img/trash-solid.svg',
-                    //     message: 'You task has been deleted.',
-                    //     position: "topCenter",
-                    //     timeout: 3000,
-                    // });
-
-                    // setTimeout(function(){
-                    //     window.location.href ="home.html";
-                    // }, 2000);
-                    
+                    $("#logoutModal").modal("hide");
+                    console.log("Task Deleted")        
                 }
             })
         })
