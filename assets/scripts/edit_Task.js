@@ -60,49 +60,51 @@ let editTaskBtn = document.querySelector('#editTaskBtn');
 let editTitle = document.querySelector('#editTitle');
 let editDescription = document.querySelector('#editDescription');
 
-editTaskBtn.addEventListener('click', (e) => {
-    e.preventDefault();
-
-    const title = editTitle.value;
-    const description = editDescription.value;
-
-    console.log(title);
-    console.log(description);
+if (editTaskBtn) {
+    editTaskBtn.addEventListener('click', (e) => {
+        e.preventDefault();
     
-    if (title == "" || description == "") {
-        iziToast.error({
-            title: "Error",
-            message: 'Please fill up all fields.',
-            position: "topCenter",
-            timeout: 3000,
-        });
-    } else {
-        document.querySelector('#editTaskBtn').disabled = true;
-        auth.onAuthStateChanged(async user => {
-            if (user) {
-                let receivedTaskId = sessionStorage.getItem("taskId");
-                await db.collection("tasks").doc(receivedTaskId).update({
-                    "title": title,
-                    "description": description,
-                  }).then(() => {
-                    console.log('Task Update');
-                    
-                }).catch(err => {
-                    console.log(err.message);
-                })
-            }
-            else {
-                iziToast.error({
-                    title: "Unauthorzed Access",
-                    message: 'Please log-in to add tasks.',
-                    position: "topCenter",
-                    timeout: 3000,
-                });
-            }
-        })
-    }
-
-})
+        const title = editTitle.value;
+        const description = editDescription.value;
+    
+        console.log(title);
+        console.log(description);
+        
+        if (title == "" || description == "") {
+            iziToast.error({
+                title: "Error",
+                message: 'Please fill up all fields.',
+                position: "topCenter",
+                timeout: 3000,
+            });
+        } else {
+            document.querySelector('#editTaskBtn').disabled = true;
+            auth.onAuthStateChanged(async user => {
+                if (user) {
+                    let receivedTaskId = sessionStorage.getItem("taskId");
+                    await db.collection("tasks").doc(receivedTaskId).update({
+                        "title": title,
+                        "description": description,
+                      }).then(() => {
+                        console.log('Task Update');
+                        
+                    }).catch(err => {
+                        console.log(err.message);
+                    })
+                }
+                else {
+                    iziToast.error({
+                        title: "Unauthorzed Access",
+                        message: 'Please log-in to add tasks.',
+                        position: "topCenter",
+                        timeout: 3000,
+                    });
+                }
+            })
+        }
+    
+    })
+}
 
 
 // -----------------------------------------------------------------------------------------------------

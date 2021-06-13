@@ -112,7 +112,28 @@ function renderTask(doc) {
     // taskCard.insertBefore(li, taskCard.childNodes[0]);
     taskCard.appendChild(li);
     taskCard.appendChild(br);
+
+// -----------------------------------------------------------------------------------------------------
+// GO TO EDIT TASK PAGE
+    let taskId = edit.getAttribute('data-id');
+    let getTitle = taskTitle.innerText;
+    let getDescription = taskDescription.innerText;
+
+    
+    edit.addEventListener("click", (e) => {
+        e.stopPropagation();
+
+        console.log("go to update page");
+        console.log(taskId);
+        sessionStorage.setItem("taskId", taskId);
+        sessionStorage.setItem("taskTitle", getTitle);
+        sessionStorage.setItem("taskDescription", getDescription);
+        window.location.href ="edit_task.html";
+        
+    });
+    
 }
+
 // -----------------------------------------------------------------------------------------------------
 
 // ADDING TASK FIREBASE
@@ -120,58 +141,64 @@ let addTaskBtn = document.querySelector('#addTaskBtn');
 let inputTitle = document.querySelector('#inputTitle');
 let inputDescription = document.querySelector('#inputDescription');
 
-addTaskBtn.addEventListener('click', (e) => {
+let date = new Date();
+let time = date.getTime();
+let counter = time;
+
+if (addTaskBtn) {
+    addTaskBtn.addEventListener('click', (e) => {
 
     
-    e.preventDefault();
-    const title = inputTitle.value;
-    const description = inputDescription.value;
-    let author;
-
-    console.log(title);
-    console.log(description);
+        e.preventDefault();
+        const title = inputTitle.value;
+        const description = inputDescription.value;
+        let author;
     
-    if (title == "" || description == "") {
-        iziToast.error({
-            title: "Error",
-            message: 'Please fill up all fields.',
-            position: "topCenter",
-            timeout: 3000,
-        });
-    } else {
-        document.querySelector('#addTaskBtn').disabled = true;
-        auth.onAuthStateChanged(async user => {
-            if (user) {
-                await db.collection('users').doc(user.uid).get().then(doc => {
-                    author = doc.data().name;
-                    console.log(author);
-                })
-                await db.collection("tasks").add({
-                    "uid": user.uid,
-                    "author": author,
-                    "title": title,
-                    "description": description,
-                    "createdOn": firebase.firestore.Timestamp.now(),
-                    "created": firebase.firestore.Timestamp.now(),
-                  }).then(() => {
-                    console.log('Task Added');
-                    window.location.href ="home.html";
-                    
-                }).catch(err => {
-                    console.log(err.message);
-                })
-            }
-            else {
-                iziToast.error({
-                    title: "Unauthorzed Access",
-                    message: 'Please log-in to add tasks.',
-                    position: "topCenter",
-                    timeout: 3000,
-                });
-            }
-        })
-    }
-
-})
+        console.log(title);
+        console.log(description);
+        
+        if (title == "" || description == "") {
+            iziToast.error({
+                title: "Error",
+                message: 'Please fill up all fields.',
+                position: "topCenter",
+                timeout: 3000,
+            });
+        } else {
+            document.querySelector('#addTaskBtn').disabled = true;
+            auth.onAuthStateChanged(async user => {
+                if (user) {
+                    await db.collection('users').doc(user.uid).get().then(doc => {
+                        author = doc.data().name;
+                        console.log(author);
+                    })
+                    await db.collection("tasks").add({
+                        "uid": user.uid,
+                        "author": author,
+                        "title": title,
+                        "description": description,
+                        "createdOn": firebase.firestore.Timestamp.now(),
+                        "created": firebase.firestore.Timestamp.now(),
+                      }).then(() => {
+                        console.log('Task Added');
+                        window.location.href ="home.html";
+                        
+                    }).catch(err => {
+                        console.log(err.message);
+                    })
+                }
+                else {
+                    iziToast.error({
+                        title: "Unauthorzed Access",
+                        message: 'Please log-in to add tasks.',
+                        position: "topCenter",
+                        timeout: 3000,
+                    });
+                }
+            })
+        }
+    
+    })
+}
 
 // -----------------------------------------------------------------------------------------------------
