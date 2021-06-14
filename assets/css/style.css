@@ -112,3 +112,16 @@ ul {
 .card {
     border-color: transparent;
 }
+
+/* HOME ADD BUTTON */
+.addBtn{
+    background-color:#738fb9;
+    color: white;
+    border-color: #738fb9;
+}
+
+.addBtn:hover{
+    background-color:#7296CD;
+    color: white;
+    border-color: #7296CD;
+}
