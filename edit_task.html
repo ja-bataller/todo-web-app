@@ -35,7 +35,7 @@
         </nav>
 
         <div class="container">
-            <div class="container mt-4 mb-3" style="width: 50%;">
+            <div class="container mt-4 mb-3">
                 <a class="btn btn-outline-secondary" href="home.html"><i class="fas fa-arrow-left"></i></a>
                 <button id="deleteIcon" class="btn btn-outline-danger" style="float: right;"><i class="fas fa-trash"></i></button>
             </div>
@@ -45,15 +45,15 @@
             <h3 class="container mt-4 mb-3" style="font-weight: 600; width: 50%; text-align: center;">Edit Task</h3>
     
             <form id="addTaskForm">
-                <div class="form-group container mt-4" style="width: 50%;">
+                <div class="form-group container mt-4">
                     <label for="Title">Title</label>
-                    <input type="text" id="editTitle" class="form-control" style="height: 50px;" aria-label="Large" autocomplete="off" placeholder="Title" required>
+                    <input type="text" id="editTitle" class="form-control" style="height: 50px;" aria-label="Large" maxlength="24" autocomplete="off" placeholder="Title" required>
                 </div>
-                <div class="form-group container mt-4" style="width: 50%;">
+                <div class="form-group container mt-4">
                     <label for="Description">Description</label>
                     <input type="text" id="editDescription" class="form-control" style="height: 50px;" aria-label="Large" autocomplete="off" placeholder="Description" required>
                 </div>
-                <div class="form-group container mt-4" style="width: 50%;">
+                <div class="form-group container mt-4">
                     <button type="button" id="editTaskBtn" class="btn btn-primary btn-block" style="font-size: 1.5em; height: 50px; border-radius: 10px; background-color: #7296CD; border-color: #7296CD;">Update task</button>
                 </div>
             </form>

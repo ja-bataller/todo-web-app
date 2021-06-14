@@ -21,8 +21,6 @@ auth.onAuthStateChanged(user => {
                         timeout: 2000,
                     });
                 } else if (change.type == "modified") {
-                    // let li = taskCard.querySelector(`[data-id="${change.doc.id}"]`);
-                    // li.firstChild.textContent = change.doc.data().task;
                     iziToast.info({
                         title: "Updated",
                         iconUrl: 'assets/img/edit-regular.svg',
@@ -70,28 +68,25 @@ function renderTask(doc) {
     let li = document.createElement("li");
     let taskTitle = document.createElement("span");
     let taskDescription = document.createElement("span");
-    let del = document.createElement("div");
     let edit = document.createElement("div");
     let br = document.createElement("div");
     let divider = document.createElement("div");
     
 
     // li.classList.add("list-group-item")
-    li.classList.add("card-body")
     li.classList.add("pt-4")
     li.classList.add("pb-4")
+    li.classList.add("pl-4")
+    li.classList.add("pr-4")
+    
     li.classList.add("taskCard")
 
     taskTitle.classList.add("taskTitleStyle");
     taskDescription.classList.add("taskDescriptionStyle");
 
-    del.classList.add("trashBtn");
-    del.classList.add("ml-3");
     edit.classList.add("editBtn");
-    edit.classList.add("ml-3")
-   
+
     li.setAttribute('data-id', doc.id);
-    del.setAttribute('data-id', doc.id);
     edit.setAttribute('data-id', doc.id);
     
     taskTitle.textContent= doc.data().title;
@@ -103,7 +98,6 @@ function renderTask(doc) {
     br.innerHTML= `<br>`;
     
     li.appendChild(taskTitle);
-    li.appendChild(del);
     li.appendChild(edit);
     li.appendChild(divider);
     li.appendChild(taskDescription);
