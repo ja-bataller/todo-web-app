@@ -68,11 +68,13 @@ function renderTask(doc) {
     let li = document.createElement("li");
     let taskTitle = document.createElement("span");
     let taskDescription = document.createElement("span");
+    let taskDateTime = document.createElement("span");
     let edit = document.createElement("div");
     let br = document.createElement("div");
     let divider = document.createElement("div");
-    
 
+    let date = doc.data().createdOn.toDate().toLocaleString()
+    
     // li.classList.add("list-group-item")
     li.classList.add("pt-4")
     li.classList.add("pb-4")
@@ -83,6 +85,7 @@ function renderTask(doc) {
 
     taskTitle.classList.add("taskTitleStyle");
     taskDescription.classList.add("taskDescriptionStyle");
+    taskDateTime.classList.add("taskDateTimeStyle");
 
     edit.classList.add("editBtn");
 
@@ -91,6 +94,7 @@ function renderTask(doc) {
     
     taskTitle.textContent= doc.data().title;
     taskDescription.textContent= doc.data().description;
+    taskDateTime.textContent= date;
 
     edit.innerHTML= `<i class="fas fa-pen fa-2x"></i>`;
     divider.innerHTML= `<hr class="task">`;
@@ -100,6 +104,7 @@ function renderTask(doc) {
     li.appendChild(taskTitle);
     li.appendChild(edit);
     li.appendChild(divider);
+    li.appendChild(taskDateTime);
     li.appendChild(taskDescription);
     
 
@@ -141,9 +146,8 @@ let counter = time;
 
 if (addTaskBtn) {
     addTaskBtn.addEventListener('click', (e) => {
-
-    
         e.preventDefault();
+
         const title = inputTitle.value;
         const description = inputDescription.value;
         let author;
@@ -158,10 +162,12 @@ if (addTaskBtn) {
                 position: "topCenter",
                 timeout: 3000,
             });
+            return;
         } else {
-            document.querySelector('#addTaskBtn').disabled = true;
             auth.onAuthStateChanged(async user => {
                 if (user) {
+                    document.getElementById("addTaskBtn").style.display = "none";
+                    document.getElementById("addTaskBtnSpinner").style.display = "block";
                     await db.collection('users').doc(user.uid).get().then(doc => {
                         author = doc.data().name;
                         console.log(author);

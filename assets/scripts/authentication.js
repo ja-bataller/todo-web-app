@@ -12,6 +12,8 @@ if (loginForm) {
 
         // LOG-IN USER - FIREBASE
         auth.signInWithEmailAndPassword(email, password).then(cred => {
+            document.getElementById("logInBtn").style.display = "none";
+            document.getElementById("logInBtnSpinner").style.display = "block";
             console.log("Signed-in")
             loginForm.reset()
             // window.location.replace( "main.html" )
@@ -19,8 +21,8 @@ if (loginForm) {
             return
         }).catch( e => {
             iziToast.error({
-                title: "Unauthorzed Access",
-                message: 'This user is not registered.',
+                title: "Error",
+                message: e.message,
                 position: "topCenter",
                 timeout: 3000,
             });
@@ -47,6 +49,8 @@ if (signupForm) {
         if (password == confirmPassword) {
             // SIGN-UP USER - FIREBASE
             auth.createUserWithEmailAndPassword(email, password).then(cred => {
+                document.getElementById("signUpBtn").style.display = "none";
+                document.getElementById("signUpBtnSpinner").style.display = "block";
                 return db.collection('users').doc(cred.user.uid).set({
                     name: signupForm.signupName.value,
                     uid: cred.user.uid
@@ -65,6 +69,7 @@ if (signupForm) {
                     timeout: 3000,
                 });
                 signupForm.reset();
+                return
             })
         } else {
             console.log("Password doesn't match.")

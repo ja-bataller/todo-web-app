@@ -54,6 +54,7 @@ hr.solid {
   }
 
 hr.task {
+    display: none;
     border-top: 3px solid #da7f8f;
     width: 100%;
 }
@@ -89,13 +90,18 @@ ul {
   }
 
 .taskTitleStyle {
-    font-size: 1.7em;
+    font-size: 2.0em;
     font-weight: 530;
 }
 
 .taskDescriptionStyle {
-    font-size: 1.3em;
+    display: none;
+}
+
+.taskDateTimeStyle {
+    font-size: 0.8em;
     font-weight: 500;
+
 }
 
 .taskCard {

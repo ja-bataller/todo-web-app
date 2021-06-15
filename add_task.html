@@ -19,7 +19,7 @@
 
     <!-- TITLE ICON -->
     <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.ico"/>
-    <title>To-do App</title>
+    <title>Add Task - To-do App</title>
 </head>
 <body>
         <nav class="navbar navbar-dark bg-dark pt-2 pb-2">
@@ -51,10 +51,14 @@
                 </div>
                 <div class="form-group container mt-4">
                     <label for="Description">Description</label>
-                    <input type="text" id="inputDescription" class="form-control" style="height: 50px;" aria-label="Large" autocomplete="off" placeholder="Description" required>
+                    <textarea class="form-control" style="height: 50px;" aria-label="Large" autocomplete="off" placeholder="Description" required name="" id="inputDescription" cols="30" rows="10"></textarea>
+                    <!-- <input type="text" id="inputDescription" class="form-control" style="height: 50px;" aria-label="Large" autocomplete="off" placeholder="Description" required> -->
                 </div>
                 <div class="form-group container mt-4">
                     <button type="button" id="addTaskBtn" class="btn btn-primary btn-block" style="font-size: 1.5em; height: 50px; border-radius: 10px; background-color: #7296CD; border-color: #7296CD;">Add task</button>
+                    <button type="button" id="addTaskBtnSpinner" class="btn btn-primary btn-block" style="font-size: 1.5em; height: 50px; border-radius: 10px; background-color: #7296CD; border-color: #7296CD; display: none;" disabled>
+                    <div class="spinner-border" role="status"></div>
+                    </button>
                 </div>
             </form>
 

@@ -51,7 +51,10 @@
             </div>
             <input type="password" class="form-control p-4" id="signupConfirmPassword" minlength="6" placeholder="Confirm password" required>
           </div>
-            <button type="submit" class="btn btn-primary p-2" style="height: 50px; width:100%; font-size: 1.5em; color: #fff; background-color: #7296CD; border-color: #7296CD; border-radius: 20px;">Sign-up</button>
+            <button id="signUpBtn" type="submit" class="btn btn-primary p-2" style="height: 50px; width:100%; font-size: 1.5em; color: #fff; background-color: #7296CD; border-color: #7296CD; border-radius: 20px;">Sign-up</button>
+            <button id="signUpBtnSpinner" type="submit" class="btn btn-primary p-2" style="height: 50px; width:100%; font-size: 1.5em; color: #fff; background-color: #7296CD; border-color: #7296CD; border-radius: 20px; display: none;" disabled>
+            <div class="spinner-border" role="status"></div>
+            </button>
         </form>
     </div>
 

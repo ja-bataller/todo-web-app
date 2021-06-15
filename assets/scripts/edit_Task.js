@@ -77,9 +77,11 @@ if (editTaskBtn) {
                 position: "topCenter",
                 timeout: 3000,
             });
+            return;
         } else {
-            document.querySelector('#editTaskBtn').disabled = true;
             auth.onAuthStateChanged(async user => {
+                document.getElementById("editTaskBtn").style.display = "none";
+                document.getElementById("editTaskBtnSpinner").style.display = "block";
                 if (user) {
                     let receivedTaskId = sessionStorage.getItem("taskId");
                     await db.collection("tasks").doc(receivedTaskId).update({
@@ -100,6 +102,7 @@ if (editTaskBtn) {
                         timeout: 3000,
                     });
                 }
+                return;
             })
         }
     
