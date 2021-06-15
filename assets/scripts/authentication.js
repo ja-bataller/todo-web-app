@@ -15,7 +15,7 @@ if (loginForm) {
             document.getElementById("logInBtn").style.display = "none";
             document.getElementById("logInBtnSpinner").style.display = "block";
             console.log("Signed-in")
-            loginForm.reset()
+            // loginForm.reset()
             // window.location.replace( "main.html" )
             location = "home.html";
             return
@@ -55,8 +55,8 @@ if (signupForm) {
                     name: signupForm.signupName.value,
                     uid: cred.user.uid
                 }).then(() => {
-                    console.log(cred);
-                    signupForm.reset();
+                    // console.log(cred);
+                    // signupForm.reset();
                     location = "home.html"
                 })   
                 
