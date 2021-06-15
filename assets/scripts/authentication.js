@@ -9,11 +9,11 @@ if (loginForm) {
         // GET SIGN-IN DATA
         const email = loginForm.loginEmail.value;
         const password = loginForm.loginPassword.value;
+        document.getElementById("logInBtn").style.display = "none";
+        document.getElementById("logInBtnSpinner").style.display = "block";
 
         // LOG-IN USER - FIREBASE
         auth.signInWithEmailAndPassword(email, password).then(cred => {
-            document.getElementById("logInBtn").style.display = "none";
-            document.getElementById("logInBtnSpinner").style.display = "block";
             console.log("Signed-in")
             // loginForm.reset()
             // window.location.replace( "main.html" )
@@ -27,6 +27,8 @@ if (loginForm) {
                 timeout: 3000,
             });
             loginForm.reset();
+            document.getElementById("logInBtn").style.display = "block";
+            document.getElementById("logInBtnSpinner").style.display = "none";
         })
     })
 }
@@ -45,12 +47,13 @@ if (signupForm) {
         const password = signupForm.signupPassword.value;
         const confirmPassword = signupForm.signupConfirmPassword.value;
 
+        document.getElementById("signUpBtn").style.display = "none";
+        document.getElementById("signUpBtnSpinner").style.display = "block";
+
 
         if (password == confirmPassword) {
             // SIGN-UP USER - FIREBASE
             auth.createUserWithEmailAndPassword(email, password).then(cred => {
-                document.getElementById("signUpBtn").style.display = "none";
-                document.getElementById("signUpBtnSpinner").style.display = "block";
                 return db.collection('users').doc(cred.user.uid).set({
                     name: signupForm.signupName.value,
                     uid: cred.user.uid
@@ -68,6 +71,8 @@ if (signupForm) {
                     position: "topCenter",
                     timeout: 3000,
                 });
+                document.getElementById("signUpBtn").style.display = "block";
+                document.getElementById("signUpBtnSpinner").style.display = "none";
                 signupForm.reset();
                 return
             })
@@ -80,6 +85,9 @@ if (signupForm) {
                 position: "topCenter",
                 timeout: 3000,
             });
+            
+            document.getElementById("signUpBtn").style.display = "block";
+            document.getElementById("signUpBtnSpinner").style.display = "none";
             
             // CLEAR PASSWORD & CONFIRM PASSWORD INPUT FIELD
             document.querySelector("#signupPassword").value = "";

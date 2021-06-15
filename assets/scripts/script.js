@@ -184,7 +184,12 @@ if (addTaskBtn) {
                         window.location.href ="home.html";
                         
                     }).catch(err => {
-                        console.log(err.message);
+                        iziToast.error({
+                            title: "Error",
+                            message: err.message,
+                            position: "topCenter",
+                            timeout: 3000,
+                        });
                     })
                 }
                 else {
